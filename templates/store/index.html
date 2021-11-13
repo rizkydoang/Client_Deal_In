@@ -1,0 +1,144 @@
+{% extends 'master/base-content.html' %}
+{% load static %}
+{% block content %}
+<div class="modal fade" id="add_item" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" style="text-align: center;" id="exampleModalLabel">Tambah Barang</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="POST" action="{% url 'add_item_store' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-5">
+                                <label for="item">Nama Barang / Produk :</label>
+                                <input type="hidden" id="id" name="id" value="">
+                                <input type="text" class="form-control" id="item" name="name" placeholder="Nama Barang / Produk">
+                            </div> 
+                            <div class="form-group col-md-6">
+                                <label for="photo_item">Foto Barang / Produk :</label>
+                                <input type="file" class="form-control" id="photo_item" name="photo_item" placeholder="Upload Foto Barang">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="qty">Jumlah :</label>
+                                <input type="number" class="form-control" id="qty" name="quantity" placeholder="Jumlah Barang">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="price">Harga : </label>
+                                <input type="number" class="form-control" id="price" name="price" placeholder="Harga Barang">
+                            </div>
+                            <input type="hidden" class="form-control" id="id_store" name="id_store" value="{{store}}">
+                            <div class="form-group col-md-3">
+                                <label for="category">Kategori</label><br>
+                                <select class="form-control" id="category" name="id_category">
+                                    <option selected>Pilih...</option>
+                                    <option value="1">Sayuran</option>
+                                    <option value="2">Makanan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-11">
+                                <label for="desc">Deskripsi :</label>
+                                <input type="text" class="form-control" id="desc" name="description" placeholder="Deskripsi Barang">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Tambahkan"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="top-brands">
+    <div class="container">
+        <h2>{{store}}</h2>
+        <div class="grid_3 grid_5">
+            <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs-in" role="tablist">
+                    <li role="presentation" class="active"><a href="#expeditions" id="expeditions-tab" role="tab"
+                            data-toggle="tab" aria-controls="expeditions" aria-expanded="true">BARANG ANDA</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="expeditions"
+                        aria-labelledby="expeditions-tab">
+                        <div class="agile-tp">
+                            <button type="button" style="float: right; margin-top: -10px;" class="btn btn-primary" onclick="Clear_Update_Item()" data-toggle="modal" data-target="#add_item">
+                                Tambah Barang
+                            </button>
+                            <h5>BARANG ANDA</h5>
+                            <p class="w3l-ad">Pasang Iklan barang jualan mu disini agar meningkatkan peluang bisnis mu!
+                            </p>
+                        </div>
+                        <div class="agile_top_brands_grids">
+                            <!-- start -->
+                            {% for i in item_store.values %}
+                                {% for j in i %}
+                                    <div class="col-md-4 top_brand_left">
+                                        <div class="hover14 column">
+                                            <div class="agile_top_brand_left_grid">
+                                                <div class="agile_top_brand_left_grid_pos">
+                                                    <img src="{% static 'images/offer.png' %}" alt=" " class="img-responsive" />
+                                                </div>
+                                                <div class="agile_top_brand_left_grid1">
+                                                    <figure>
+                                                        <div class="snipcart-item block">
+                                                            <div class="snipcart-thumb">
+                                                                <a href="products.html"><img title=" " class="img_item" alt=" "
+                                                                        src="{{j.photo_item.url}}" /></a>
+                                                                <p>{{j.name}}</p>
+                                                                <div class="stars">
+                                                                    <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                                    <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                                    <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                                    <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                                    <i class="fa fa-star gray-star" aria-hidden="true"></i>
+                                                                </div>
+                                                                <h4>Rp. {{j.price}}</h4>
+                                                            </div>
+                                                            <div class="snipcart-details top_brand_home_details">
+                                                                <form action="#" method="post">
+                                                                    <input type="hidden" id="{{j.id}}_updt_id_item" value="{{j.id}}">
+                                                                    <input type="hidden" id="{{j.id}}_updt_name" value="{{j.name}}">
+                                                                    <input type="hidden" id="{{j.id}}_updt_quantity" value="{{j.quantity}}">
+                                                                    <input type="hidden" id="{{j.id}}_updt_id_category" value="{{j.id_category_id.id}}">
+                                                                    <input type="hidden" id="{{j.id}}_updt_description" value="{{j.description}}">
+                                                                    <input type="hidden" id="{{j.id}}_updt_price" value="{{j.price}}">
+                                                                    <input type="button" onclick="Update_Item({{j.id}})" value="Edit" class="button" data-toggle="modal" data-target="#add_item"/>
+                                                                </form>
+                                                                <form action="" method="post">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" name="id_item" id="id_item" value="{{j.id}}">
+                                                                    <input type="submit" name="submit" value="Hapus" class="button-delete" />
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </figure>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <h3 style="text-align: center;" >Barang Kosong</h3>
+                                {% endfor %}
+                            {% endfor %}
+                            <!-- end -->
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

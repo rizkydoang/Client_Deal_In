@@ -1,0 +1,69 @@
+{% extends 'master/base-login.html' %}
+{% load static %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6" style="margin-top: 60px;">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <div class="center">
+                            <img src="{% static 'images/logo.png' %}" class="center" style="width: 100px;">
+                        </div>
+                    </div>
+                    {% for message in messages %}
+                    <div class="alert alert-danger">
+                        <a class="close" href="#" data-dismiss="alert">×</a>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    <form role="form" method="POST" onsubmit="Checkfiles(this)" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="name">Id Toko/Lapak :</label>
+                                <input type="text" class="form-control" id="id" name="id"
+                                placeholder="Masukan ID Toko Anda" required>
+                            </div>
+                            <p style="color: red; font-size: 12px;margin-top: -20px;">Tidak boleh ada Spasi</p>
+                            <div class="form-group">
+                                <label for="name">Nama Toko/Lapak :</label>
+                                <input type="text" class="form-control" id="store" name="store"
+                                placeholder="Masukan Nama Toko Anda" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><b>Upload Foto KTP</b></span>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="ktp_photo" name="ktp_photo" required>
+                                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                </div>
+                            </div>
+                            <p style="color: red; font-size: 12px;margin-top: -10px;">format foto : (.jpeg), (.jpg), (.png)</p>
+                            <div class="form-row">
+                                <div class="form-group col-md-8">
+                                    <label for="ktp_photo">NIK :</label>
+                                    <input type="text" class="form-control" id="nik" name="nik"
+                                            placeholder="Masukan NIK anda" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="pin">PIN :</label>
+                                    <input type="password" class="form-control" id="pin" maxlength="4" name="pin"
+                                        placeholder="Masukan PIN Toko" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'home' %}">< kembali ke Home</a> 
+                            <button type="submit" id="submit" style="float: right;"
+                                class="btn btn-primary">Daftarkan Toko</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

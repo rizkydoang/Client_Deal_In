@@ -1,0 +1,48 @@
+{% extends 'master/base-login.html' %}
+{% load static %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6" style="margin-top: 60px;">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <div class="center">
+                            <img src="{% static 'images/logo.png' %}" class="center" style="width: 100px;">
+                        </div>
+                    </div>
+                    {% for message in messages %}
+                    <div class="alert alert-danger">
+                        <a class="close" href="#" data-dismiss="alert">×</a>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    <form role="form" method="POST">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="text-center mt-5">
+                                <label for="address">PIN Toko anda</label>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3 center">
+                                <br>
+                                <br>
+                                <input type="password" style="text-align: center; font-size: 30px;" class="form-control" id="address" name="pin" pattern="[0-9]{4}"
+                                    maxlength="4" placeholder="_ _ _ _" autofocus required>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="card-footer">
+                            <a href="{% url 'home' %}">< kembali ke Home</a> 
+                            <button type="submit" id="submit" style="float: right;" class="btn btn-primary">Masuk</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,285 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DeaL.in | {{title}}</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Super Market Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <script type="application/x-javascript">
+        addEventListener("load", function() {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <!-- //for-mobile-apps -->
+    <link href="{% static 'dist/css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{% static 'dist/css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <!-- font-awesome icons -->
+    <link href="{% static 'dist/css/font-awesome.css' %}" type="text/css" rel="stylesheet" media="all" />
+    <!-- //font-awesome icons -->
+    <!-- js -->
+    <script src="{% static 'jquery/jquery-1.11.1.min.js' %}"></script>
+    <!-- //js -->
+    <link href='//fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" src="{% static 'jquery/move-top.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery/easing.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event) {
+                event.preventDefault();
+                $('html,body').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000);
+            });
+        });
+    </script>
+    <!-- start-smoth-scrolling -->
+</head>
+
+<body>
+    <!-- header -->
+    <div class="agileits_header">
+        <div class="container">
+            <div class="w3l_offers">
+                <p>DISKON SAMPAI 50%. MASUKAN KODE "DOANG50%" . <a href="products.html">BELANJA SEKARANG</a></p>
+            </div>
+            <div class="agile-login">
+                <ul>
+                    {% if 'token_access' not in request.COOKIES %}
+                        <a href="{% url 'signup_user' %}" class="btn btn-primary" role="button">Daftar</a>
+                    <li>
+                        <a href="{% url 'login_user' %}" class="btn btn-primary" role="button">Masuk</a>
+                    {% endif %}
+                    {% if 'token_access' in request.COOKIES %}
+                        <div class="btn-group">
+                            <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Halo {{user}} !
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#register">Profil</a>
+                                <a class="dropdown-item" href="{% url 'signup_store' %}">Buka Toko</a>
+                                <a class="dropdown-item" href="{% url 'logout_user' %}">Keluar</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    </li>
+                </ul>
+            </div>
+            <!-- <div class="product_list_header">
+                <button class="w3view-cart" type="button" name="submit"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
+            </div> -->
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="logo_products">
+        <div class="container">
+            <div class="w3ls_logo_products_left1">
+                <ul class="phone_email">
+                    <li><i class="fa fa-phone" aria-hidden="true"></i>Order online atau kontak : (+62)852 3980 7970</li>
+                </ul>
+            </div>
+            <div class="w3ls_logo_products_left">
+                <a href="{% url 'home' %}"><img class="logo" src="{% static 'images/logo.png' %}" alt=""></a>
+            </div>
+            <div class="w3l_search">
+                <form action="{% url 'search_item_store' %}" method="post">
+                    {% csrf_token %}
+                    <input type="search" name="search" placeholder="Cari Produk atau Makanan..." required="">
+                    <button type="submit" class="btn btn-default search" aria-label="Left Align">
+					<i class="fa fa-search" aria-hidden="true"> </i>
+				    </button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+    <!-- //header -->
+    <!-- navigation -->
+    <div class="navigation-agileits">
+        <div class="container">
+            <nav class="navbar navbar-default">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header nav_2">
+                    <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="index.html" class="act">Dashboard</a></li>
+                        <!-- Mega Menu -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Kategori<b class="caret"></b></a>
+                            <ul class="dropdown-menu multi-column columns-3">
+                                <div class="row">
+                                    <div class="multi-gd-img">
+                                        <ul class="multi-column-dropdown">
+                                            <h6>Semua kategori</h6>
+                                            <li><a href="groceries.html">Fashion</a></li>
+                                            <li><a href="groceries.html">Prabotan</a></li>
+                                            <li><a href="groceries.html">Aksesoris & Gadget</a></li>
+                                            <li><a href="groceries.html">Makanan</a></li>
+                                            <li><a href="groceries.html">Minuman</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ul>
+                        </li>
+                        <li><a href="gourmet.html">Toko</a></li>
+                        <li><a href="offers.html">Bantuan</a></li>
+                        <li><a href="contact.html">Kontak</a></li>
+                        <li><a href="contact.html">Lapor</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    {% block content %} {% endblock content %}
+    <div class="footer">
+        <div class="container">
+            <div class="w3_footer_grids">
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Contact</h3>
+
+                    <ul class="address">
+                        <li><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>1234k Avenue, 4th block, <span>New York City.</span></li>
+                        <li><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i><a href="mailto:info@example.com">info@example.com</a></li>
+                        <li><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>+1234 567 567</li>
+                    </ul>
+                </div>
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Information</h3>
+                    <ul class="info">
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="about.html">About Us</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="contact.html">Contact Us</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="short-codes.html">Short Codes</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="faq.html">FAQ's</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="products.html">Special Products</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Category</h3>
+                    <ul class="info">
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="groceries.html">Groceries</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="household.html">Household</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="personalcare.html">Personal Care</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="packagedfoods.html">Packaged Foods</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="beverages.html">Beverages</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Profile</h3>
+                    <ul class="info">
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="products.html">Store</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="checkout.html">My Cart</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="login.html">Login</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="registered.html">Create Account</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+
+        <div class="footer-copy">
+            <div class="container">
+                <p>© 2020 Deal.in . All rights reserved | Design by <a href="http://w3layouts.com/">W3layouts</a></p>
+                <p>Powered by Ngode.in</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer-botm">
+        <div class="container">
+            <div class="w3layouts-foot">
+                <ul>
+                    <li><a href="#" class="w3_agile_facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                    <li><a href="#" class="agile_twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                    <li><a href="#" class="w3_agile_dribble"><i class="fa fa-dribbble" aria-hidden="true"></i></a></li>
+                    <li><a href="#" class="w3_agile_vimeo"><i class="fa fa-vimeo" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+            <div class="payment-w3ls">
+                <img src="{% static 'images/card.png' %}" alt=" " class="img-responsive">
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+    <!-- //footer -->
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'jquery/bootstrap.min.js' %}"></script>
+    <!-- top-header and slider -->
+    <script src="{% static 'jquery/minicart.min.js' %}"></script>
+    <script>
+        // Mini Cart
+        paypal.minicart.render({
+            action: '#'
+        });
+        if (~window.location.search.indexOf('reset=true')) {
+            paypal.minicart.reset();
+        }
+    </script>
+    <!-- main slider-banner -->
+    <script src="{% static 'jquery/skdslider.min.js' %}"></script>
+    <script src="{% static 'dist/js/store.js' %}"></script>
+    <link href="{% static 'dist/css/skdslider.css' %}" rel="stylesheet">
+    <script type="text/javascript">
+        $('.modal-content').resizable({
+            //alsoResize: ".modal-dialog",
+            minHeight: 300,
+            minWidth: 300
+        });
+        $('.modal-dialog').draggable();
+
+        $('#myModal').on('show.bs.modal', function() {
+            $(this).find('.modal-body').css({
+                'max-height': '100%'
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('#demo1').skdslider({
+                'delay': 5000,
+                'animationSpeed': 2000,
+                'showNextPrev': true,
+                'showPlayButton': true,
+                'autoSlide': true,
+                'animationType': 'fading'
+            });
+            jQuery('#responsive').change(function() {
+                $('#responsive_wrapper').width(jQuery(this).val());
+            });
+        });
+
+        $('.modal-content').resizable({
+            //alsoResize: ".modal-dialog",
+            minHeight: 300,
+            minWidth: 300
+        });
+        $('.modal-dialog').draggable();
+
+        $('#myModal').on('show.bs.modal', function() {
+            $(this).find('.modal-body').css({
+                'max-height': '100%'
+            });
+        });
+    </script>
+    <!-- //main slider-banner -->
+    <!-- Update Item -->
+</body>
+
+
+</html>
