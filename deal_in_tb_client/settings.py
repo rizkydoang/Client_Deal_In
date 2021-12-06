@@ -1,5 +1,6 @@
 import os
 import environ
+from django.contrib.messages import constants as messages
 
 env = environ.Env(
     # set casting, default value
@@ -20,7 +21,7 @@ SECRET_KEY = 'ptgj$99t+j&x$)!7-5(y*3&qod70zd$272he&37j^bwe2d42@t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -119,3 +120,8 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}

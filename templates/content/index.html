@@ -93,7 +93,7 @@
                                                 <div class="snipcart-item block">
                                                     <div class="snipcart-thumb">
                                                         <a href="products.html"><img title=" " class="img_item" alt=" "
-                                                                src="{{j.photo_item.path}}" /></a>
+                                                                src="{{j.image_url}}" /></a>
                                                         <p>{{j.name}}</p>
                                                         <p>{{j.photo_item}}</p>
                                                         <div class="stars">
@@ -109,7 +109,11 @@
                                                             {{j.id_store.store}}</h4>
                                                     </div>
                                                     <div class="snipcart-details top_brand_home_details">
-                                                        <input type="button"  onclick="CartItem('{{j.id}}');"  data-toggle="modal" data-target="#cart_list" value="Beli Sekarang" class="button" />
+                                                        <form action="{% url 'add_cart' %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="id_item" value="{{j.id}}"/>
+                                                            <button type="submit" class="btn btn-primary">Tambahkan ke Keranjang</button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </figure>

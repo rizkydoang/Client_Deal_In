@@ -1,0 +1,58 @@
+{% extends 'master/base-content.html' %}
+{% load static %}
+{% block content %}
+<!-- about -->
+<div class="about">
+    <div class="container">
+        <h3 class="w3_agile_header">Keranjang Belanja</h3>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
+            </div>
+        {% endfor %}
+        <div class="about-agileinfo w3layouts">
+            <div class="col-md-12 about-wthree-grids grid-top">
+                <form method="POST" action="{% url 'check_out' %}">
+                    {% csrf_token %}
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Foto Item</th>
+                                <th scope="col">Nama Item</th>
+                                <th scope="col">Toko</th>
+                                <th scope="col">Harga</th>
+                                <th scope="col">Jumlah</th>
+                                <th scope="col">Hapus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in cart.data %}
+                            <tr>
+                                <input type="hidden" name="id_cart" value="{{i.id}}">
+                                <input type="hidden" name="id_item" value="{{i.id_item.id}}">
+                                <td>
+                                    <img src="{{i.id_item.image_url}}" style="width: 80px;" alt="" class="img-responsive" />
+                                </td>
+                                <td>{{i.id_item.name}}</td>
+                                <td>{{i.id_item.id_store.id}}</td>
+                                <td>{{i.id_item.price}}</td>
+                                <td>
+                                    <input type="number" style="width: 50px" name="qty_item" required>
+                                </td>
+                                <td>
+                                    <a href="{% url 'delete_cart' i.id %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button class="btn btn-primary" style="float: right; margin-right: 20px;">Check Out</button>
+                </form>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+</div>
+<!-- //about -->
+{% endblock content %}

@@ -74,9 +74,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     </li>
                 </ul>
             </div>
-            <!-- <div class="product_list_header">
-                <button class="w3view-cart" type="button" name="submit"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
-            </div> -->
+            <div class="product_list_header">
+                <a href="{% url 'cart' %}"><button class="w3view-cart" type="button" name="submit"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>
+                <a href="{% url 'transaction' %}"><button class="w3view-cart" type="button" name="submit"><i class="fa fa-exchange" aria-hidden="true"></i></button></a>
+            </div>
             <div class="clearfix"></div>
         </div>
     </div>
@@ -219,6 +220,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </div>
     <!-- //footer -->
     <!-- Bootstrap Core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{% static 'jquery/bootstrap.min.js' %}"></script>
     <!-- top-header and slider -->
     <script src="{% static 'jquery/minicart.min.js' %}"></script>

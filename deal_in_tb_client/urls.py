@@ -10,7 +10,6 @@ urlpatterns = [
     path('store/add_item/', views.AddItem, name='add_item_store'),
     path('store/search/', views.Search, name='search_item_store'),
 
-
     # Authentification App
     path('login/', views.LoginUser, name='login_user'),
     path('logout/', views.Logout, name='logout_user'),
@@ -19,5 +18,9 @@ urlpatterns = [
     path('pin_store/', views.SignUpStoreAuth, name='pin_store_auth'),
 
     path('checkout/', views.CheckOut, name='check_out'),
-
+    path('transaction/', views.Transaction, name='transaction'),
+    path('pay/', views.Pay, name='pay'),
+    path('cart/', views.Cart, name='cart'),
+    path('addcart/', views.AddCart, name='add_cart'),
+    path('deletecart/<slug:id>/', views.DeleteCart, name='delete_cart'),
 ]

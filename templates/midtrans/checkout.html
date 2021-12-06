@@ -3,67 +3,51 @@
 {% block content %}
 
 {% if response.status == 200 %}
-{% for i in response.item %}
-<div class="top_brand_left">
-    <div class="hover14_check column">
-        <div class="agile_top_brand_left_grid">
-            <div class="agile_top_brand_left_grid_pos">
-                <img src="{% static 'images/offer.png' %}" alt=" " class="img-responsive" />
+<!-- about -->
+<div class="about">
+    <div class="container">
+        <h3 class="w3_agile_header">Detail Transaksi</h3>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
             </div>
-            <div class="agile_top_brand_left_grid1">
-                <figure>
-                    <div class="snipcart-item block">
-                        <div class="snipcart-thumb">
-                            <a href="products.html"><img title=" " class="img_item" alt=" "
-                                    src="{{i.photo_item}}" /></a>
-                            <p>{{response.trans.description}}</p>
-                            <h4 style="text-align: left; margin-left: 15px;">Total Pembayaran : Rp. {{response.trans.total}}
-                            </h4>
-                            <!-- <h4 style="text-align: right; margin-right: 15px;">
-                                {{response.trans.description}}</h4> -->
-                        </div>
-                        <div class="snipcart-details top_brand_home_details">
-                            <input type="button" id="pay-button" value="Bayar" class="button" />
-                        </div>
-                    </div>
-                </figure>
+        {% endfor %}
+        <div class="about-agileinfo w3layouts">
+            <div class="col-md-12 about-wthree-grids grid-top">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Foto Item</th>
+                            <th scope="col">Nama Item</th>
+                            <th scope="col">Toko</th>
+                            <th scope="col">Jumlah</th>
+                            <th scope="col">Total Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in response.cart %}
+                        <tr>
+                            <td>
+                                <img src="{{i.id_item.image_url}}" style="width: 80px;" alt="" class="img-responsive" />
+                            </td>
+                            <td>{{i.id_item.name}}</td>
+                            <td>{{i.id_item.id_store.id}}</td>
+                            <td>{{i.qty}}</td>
+                            <td>{{i.total}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="snipcart-details top_brand_home_details">
+                    <input type="button" id="pay-button" value="Bayar" class="button" />
+                </div>
             </div>
+            <div class="clearfix"> </div>
         </div>
     </div>
 </div>
-{% endfor %}
-{% else %}
-{% for i in response.item %}
-<div class="top_brand_left">
-    <div class="hover14_check column">
-        <div class="agile_top_brand_left_grid">
-            <div class="agile_top_brand_left_grid_pos">
-                <img src="{% static 'images/offer.png' %}" alt=" " class="img-responsive" />
-            </div>
-            <div class="agile_top_brand_left_grid1">
-                <figure>
-                    <div class="snipcart-item block">
-                        <div class="snipcart-thumb">
-                            <a href="products.html"><img title=" " class="img_item" alt=" "
-                                    src="{{i.photo_item}}" /></a>
-                            {% for j in response.trans %}
-                            <p>{{j.description}}</p>
-                            <h4 style="text-align: left; margin-left: 15px;">Total Pembayaran : Rp. {{j.total}}
-                            </h4>
-                            {% endfor %}
-                            <!-- <h4 style="text-align: right; margin-right: 15px;">
-                                {{response.trans.description}}</h4> -->
-                        </div>
-                        <div class="snipcart-details top_brand_home_details">
-                            <input type="button" id="pay-button" value="Bayar" class="button" />
-                        </div>
-                    </div>
-                </figure>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
+<!-- //about -->
 {% endif %}
 
 <!-- TODO: Remove ".sandbox" from script src URL for production environment. Also input your client key in "data-client-key" -->
