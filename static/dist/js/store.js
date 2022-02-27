@@ -5,6 +5,10 @@ function Update_Item(id_item) {
     document.getElementById('category').value = document.getElementById(id_item + '_updt_id_category').value
     document.getElementById('desc').value = document.getElementById(id_item + '_updt_description').value
     document.getElementById('price').value = document.getElementById(id_item + '_updt_price').value
+
+    document.getElementById('type_button').value = 'Edit'
+    document.getElementById('action').value = 'update'
+    document.getElementById('label').innerHTML = 'Edit Barang'
 }
 
 function Clear_Update_Item() {
@@ -14,8 +18,32 @@ function Clear_Update_Item() {
     document.getElementById('category').value = ''
     document.getElementById('desc').value = ''
     document.getElementById('price').value = ''
+
+    document.getElementById('type_button').value = 'Tambah'
+    document.getElementById('action').value = 'post'
+    document.getElementById('label').innerHTML = 'Tambah Barang'
 }
 
+(function($) {
+    $.fn.inputFilter = function(inputFilter) {
+        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+        });
+    };
+}(jQuery));
+
+
+$("#cart_qty").inputFilter(function(value) {
+    return /^\d*$/.test(value); });
 
 // function getCookie(cname) {
 //     let name = cname + "=";

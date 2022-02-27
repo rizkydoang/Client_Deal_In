@@ -5,7 +5,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" style="text-align: center;" id="exampleModalLabel">Tambah Barang</h2>
+                <h2 class="modal-title" style="text-align: center;" id="label">Tambah Barang</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -18,6 +18,7 @@
                             <div class="form-group col-md-5">
                                 <label for="item">Nama Barang / Produk :</label>
                                 <input type="hidden" id="id" name="id" value="">
+                                <input type="hidden" id="action" name="action" value="">
                                 <input type="text" class="form-control" id="item" name="name" placeholder="Nama Barang / Produk">
                             </div> 
                             <div class="form-group col-md-6">
@@ -53,7 +54,7 @@
                     </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="Tambahkan"/>
+                        <input type="submit" id="type_button" class="btn btn-primary" value="Tambahkan"/>
                     </div>
                 </form>
             </div>
@@ -73,6 +74,12 @@
                     <div role="tabpanel" class="tab-pane fade in active" id="expeditions"
                         aria-labelledby="expeditions-tab">
                         <div class="agile-tp">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                <a class="close" href="#" data-dismiss="alert">×</a>
+                                {{ message }}
+                                </div>
+                            {% endfor %}
                             <button type="button" style="float: right; margin-top: -10px;" class="btn btn-primary" onclick="Clear_Update_Item()" data-toggle="modal" data-target="#add_item">
                                 Tambah Barang
                             </button>
@@ -116,11 +123,7 @@
                                                                     <input type="hidden" id="{{j.id}}_updt_price" value="{{j.price}}">
                                                                     <input type="button" onclick="Update_Item({{j.id}})" value="Edit" class="button" data-toggle="modal" data-target="#add_item"/>
                                                                 </form>
-                                                                <form action="" method="post">
-                                                                    {% csrf_token %}
-                                                                    <input type="hidden" name="id_item" id="id_item" value="{{j.id}}">
-                                                                    <input type="submit" name="submit" value="Hapus" class="button-delete" />
-                                                                </form>
+                                                                <a href="{% url 'delete_item_store' id=j.id %}" class="button-delete">Hapus</a>
                                                             </div>
                                                         </div>
                                                     </figure>

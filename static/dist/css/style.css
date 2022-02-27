@@ -4175,3 +4175,22 @@ h3.agileits-icons-title {
         font-size: 13px;
     }
 }
+
+
+.description {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.detail {
+    display: flex;
+}
+
+.list_detail {
+    margin: 20px;
+}
+
+.list_detail h5 {
+    padding: 10px;
+}

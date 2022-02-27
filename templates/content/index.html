@@ -103,10 +103,11 @@
                                                             <i class="fa fa-star blue-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star gray-star" aria-hidden="true"></i>
                                                         </div>
-                                                        <h4 style="text-align: left; margin-left: 15px;">Rp. {{j.price}}
-                                                        </h4>
-                                                        <h4 style="text-align: right; margin-right: 15px;">
-                                                            {{j.id_store.store}}</h4>
+                                                        <div class="description">
+                                                            <h4>Rp. {{j.price}}</h4>
+                                                            <h4>tersisa {{j.quantity}}</h4>
+                                                        </div>
+                                                        <h4 style="text-align: center">{{j.id_store.store}}</h4>
                                                     </div>
                                                     <div class="snipcart-details top_brand_home_details">
                                                         <form action="{% url 'add_cart' %}" method="POST">

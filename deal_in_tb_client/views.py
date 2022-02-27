@@ -29,15 +29,15 @@ def TokenPinAvailable(request):
         return False
 
 
-def TransactionToken(request, order_id, gross_amount):
-    transaction_token = snap.create_transaction_token({
-        "transaction_details": {
-            "order_id": order_id,
-            "gross_amount": gross_amount
-        }
-    })
+# def TransactionToken(request, order_id, gross_amount):
+#     transaction_token = snap.create_transaction_token({
+#         "transaction_details": {
+#             "order_id": order_id,
+#             "gross_amount": gross_amount
+#         }
+#     })
 
-    return transaction_token
+#     return transaction_token
 
 
 def CreatePayment(request):
@@ -67,15 +67,16 @@ def CheckOut(request):
         username = jwt.decode(request.COOKIES['token_access'])
         data_json = {"qty": request.POST.getlist('qty_item'), "id_item": request.POST.getlist('id_item'), "id_cart": request.POST.getlist('id_cart'), "username": username['username']}
         response = requests.post('http://127.0.0.1:8000/api/store/transaction/', data=data_json, headers=header).json()
-        print(response)
 
         if response['status'] == 200:
-            context = {
-                'response': response,
-                'user': username['username'],
-                'token': TransactionToken(request, response['data']['id_transaction'], response['data']['total'])
-            }
-            return render(request, 'midtrans/checkout.html', context=context)
+            # context = {
+            #     'response': response,
+            #     'user': username['username'],
+            #     'token': TransactionToken(request, response['data']['id_transaction'], response['data']['total'])
+            # }
+            # return render(request, 'midtrans/checkout.html', context=context)
+
+            return redirect('pay', id_trans=response['data']['id_transaction'])
         elif response['status'] == 204:
             messages.error(request, response['message'])
             return redirect('transaction')
@@ -103,23 +104,43 @@ def Transaction(request):
         return redirect("login_user")
 
 
-def Pay(request):
+def Pay(request, id_trans):
     if TokenAvailable(request):
         jwt = JWTAuth()
         username = jwt.decode(request.COOKIES['token_access'])
         header = {"Authorization" : request.COOKIES['token_access']}
-        data_json = {"id_transaction": request.POST['id_transaction'], "username": username['username']}
+        data_json = {"id_transaction": id_trans, "username": username['username']}
 
         response = requests.post('http://127.0.0.1:8000/api/store/pay/', headers=header, data=data_json).json()
-        # print(response)
 
         if response['status'] == 200:
             context = {
                 'response': response,
                 'user': username['username'],
-                'token': TransactionToken(request, response['data']['id_transaction'], response['data']['total'])
             }
             return render(request, 'midtrans/checkout.html', context=context)
+        elif response['status'] == 400:
+            context = {
+                'title': "Failed",
+                'user': username['username'],
+            }
+            return render(request, 'midtrans/failed_checkout.html', context=context)
+    else:
+        messages.error(request, 'Anda Perlu Login Terlebih dahulu')
+        return redirect("login_user")
+
+
+def Cancel(request):
+    if TokenAvailable(request):
+        jwt = JWTAuth()
+        if request.method == 'POST':
+            username = jwt.decode(request.COOKIES['token_access'])
+            header = {"Authorization" : request.COOKIES['token_access']}
+            data_json = {"id_transaction": request.POST['id_transaction'], "username": username['username']}
+
+            response = requests.post('http://127.0.0.1:8000/api/store/cancel/', headers=header, data=data_json).json()
+
+            return redirect('pay', id_trans=request.POST['id_transaction'])
     else:
         messages.error(request, 'Anda Perlu Login Terlebih dahulu')
         return redirect("login_user")
@@ -173,7 +194,7 @@ def SignUpUser(request):
             result = []
             result.append(response.json())
             if result[0]['data'] != []:
-                messages.error(request, result[0]['message'])
+                messages.success(request, result[0]['message'])
                 return redirect('login_user')
             else:
                 messages.error(request, result[0]['message'])
@@ -191,6 +212,7 @@ def SignUpStore(request):
         if request.method == 'POST':
             jwt = JWTAuth()
             username = jwt.decode(request.COOKIES['token_access'])
+            header = {"Authorization" : request.COOKIES['token_access']}
             image = {"photo_store": request.FILES['ktp_photo']}
             data_json = {
                 "id": request.POST['id'],
@@ -200,13 +222,11 @@ def SignUpStore(request):
                 "pin": request.POST['pin'],
                 "id_store": request.POST['id'],
             }
-            response = requests.post('http://127.0.0.1:8000/api/user/signup_store/'+username['username']+'/?api_key='+env('API_KEY'), files=image, data=data_json).json()
-            result = []
-            result.append(response)
-            if result[0]['data'] != []:
+            response = requests.post('http://127.0.0.1:8000/api/user/signup_store/'+username['username']+'/?api_key='+env('API_KEY'), headers=header, files=image, data=data_json).json()
+            if response['data'] != []:
                 return redirect('pin_store_auth')
             else:
-                messages.error(request, result[0]['message'])
+                messages.error(request, response['message'])
                 context = {
                     'title': 'Signup Store'
                 }
@@ -217,12 +237,10 @@ def SignUpStore(request):
             username = jwt.decode(request.COOKIES['token_access'])
             header = {"Authorization" : request.COOKIES['token_access']}
             response = requests.get('http://127.0.0.1:8000/api/user/signup_store/'+username['username']+'/?api_key='+env('API_KEY'), headers=header).json()
-            result = []
-            result.append(response)
-            if result[0]['data'] != []:
+            if response['data'] != []:
                 return redirect('pin_store_auth')
             else:
-                messages.error(request, result[0]['message'])
+                messages.error(request, response['message'])
                 context = {
                     'title': 'Signup Store'
                 }
@@ -305,7 +323,7 @@ def IndexStore(request, id_store):
 
 
 def AddItem(request):
-    if request.method == 'POST':
+    if request.POST['action'] == 'post':
         data_img = {
             'name': request.POST['name'],
             'quantity': request.POST['quantity'],
@@ -319,8 +337,36 @@ def AddItem(request):
             'photo_item': request.FILES['photo_item']
         }
         header = {"Authorization" : request.COOKIES['token_access']}
-        requests.post('http://127.0.0.1:8000/api/store/item/?api_key='+env('API_KEY'), files=image, data=data_img, headers=header).json()
+        requests.post('http://127.0.0.1:8000/api/store/item/', files=image, data=data_img, headers=header).json()
         return redirect("home_store", id_store=request.COOKIES['store'])
+
+    if request.POST['action'] == 'update':
+        data_img = {
+            'name': request.POST['name'],
+            'quantity': request.POST['quantity'],
+            'price': request.POST['price'],
+            'id_store': request.COOKIES['store'],
+            'id_category': request.POST['id_category'],
+            'description': request.POST['description'],
+        }
+
+        image = {
+            'photo_item': request.FILES['photo_item']
+        }
+        header = {"Authorization" : request.COOKIES['token_access']}
+        requests.put('http://127.0.0.1:8000/api/store/item/'+ request.POST['id']+'/', files=image, data=data_img, headers=header).json()
+        return redirect("home_store", id_store=request.COOKIES['store'])
+
+
+def DeleteItem(request, id=0):
+    if TokenAvailable(request):
+        header = {"Authorization" : request.COOKIES['token_access']}
+        response = requests.delete('http://127.0.0.1:8000/api/store/item/'+id+'/', headers=header).json()
+        messages.success(request, response['message'])
+        return redirect("home_store", id_store=request.COOKIES['store'])
+    else:
+        messages.error(request, 'Anda Perlu Login Terlebih dahulu')
+        return redirect("login_user")
 
 
 def Search(request):

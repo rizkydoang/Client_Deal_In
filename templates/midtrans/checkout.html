@@ -13,6 +13,39 @@
             {{ message }}
             </div>
         {% endfor %}
+
+        {% if response.data.detail.status_code == '201' or response.data.detail.status_code == '200' %}
+        <div class="detail">
+            <div class="list_detail">
+                <h5>ID Transaksi</h5>
+                <h5>Waktu Transaksi</h5>
+                <h5>Tipe Pembayaran</h5>
+                <h5>Status Pembayaran</h5>
+            </div>
+            <div class="list_detail">
+                <h5><b>: {{response.data.detail.order_id}}</b></h5>
+                <h5><b>: {{response.data.detail.transaction_time}}</b></h5>
+                <h5><b>: {{response.data.detail.payment_type}}</b></h5>
+                <h5><b>: {{response.data.detail.transaction_status}}</b></h5>
+            </div>
+        </div>
+        {% if response.data.detail.transaction_status == 'pending' %}
+        <form action="{% url 'cancel' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="id_transaction" value="{{response.data.detail.order_id}}"/>
+            <button style="margin-left: 30px;" type="submit" class="btn btn-warning">Cancel</button>
+        </form>
+        {% endif %}
+        {% else %}
+        <div class="detail">
+            <div class="list_detail">
+                <h5>Status Pembayaran</h5>
+            </div>
+            <div class="list_detail">
+                <h5><b>: Belum Bayar</b></h5>
+            </div>
+        </div>
+        {% endif %}
         <div class="about-agileinfo w3layouts">
             <div class="col-md-12 about-wthree-grids grid-top">
                 <table class="table">
@@ -44,6 +77,7 @@
                 </div>
             </div>
             <div class="clearfix"> </div>
+            <div id="result-json"> </div>
         </div>
     </div>
 </div>
@@ -55,21 +89,24 @@
 <script type="text/javascript">
     document.getElementById('pay-button').onclick = function () {
         // SnapToken acquired from previous step
-        snap.pay('{{token}}', {
+        snap.pay('{{response.data.token}}', {
             // Optional
             onSuccess: function (result) {
                 /* You may add your own js here, this is just example */
-                document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                {% comment %} document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2); {% endcomment %}
+                window.location.href = '/pay/{{response.data.detail.order_id}}/';
             },
             // Optional
             onPending: function (result) {
                 /* You may add your own js here, this is just example */
-                document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                {% comment %} document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2); {% endcomment %}
+                window.location.href = '/pay/{{response.data.detail.order_id}}/';
             },
             // Optional
             onError: function (result) {
                 /* You may add your own js here, this is just example */
-                document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                {% comment %} document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2); {% endcomment %}
+                window.location.href = '/pay/{{response.data.detail.order_id}}/';
             }
         });
     };

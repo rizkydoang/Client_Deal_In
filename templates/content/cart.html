@@ -38,7 +38,7 @@
                                 <td>{{i.id_item.id_store.id}}</td>
                                 <td>{{i.id_item.price}}</td>
                                 <td>
-                                    <input type="number" style="width: 50px" name="qty_item" required>
+                                    <input id="cart_qty" style="width: 50px" min="1" name="qty_item" required>
                                 </td>
                                 <td>
                                     <a href="{% url 'delete_cart' i.id %}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
@@ -47,7 +47,9 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    {% if cart.data|length > 0 %}
                     <button class="btn btn-primary" style="float: right; margin-right: 20px;">Check Out</button>
+                    {% endif %}
                 </form>
             </div>
             <div class="clearfix"> </div>
