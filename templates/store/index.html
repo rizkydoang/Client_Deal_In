@@ -39,9 +39,11 @@
                             <div class="form-group col-md-3">
                                 <label for="category">Kategori</label><br>
                                 <select class="form-control" id="category" name="id_category">
-                                    <option selected>Pilih...</option>
-                                    <option value="1">Sayuran</option>
-                                    <option value="2">Makanan</option>
+                                    <option selecteds disabled>Pilih Category</option>
+                                    {% for i in category.data %}
+                                    {{i.data}}
+                                    <option value="{{i.id}}">{{i.name}}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>

@@ -66,9 +66,9 @@ def CheckOut(request):
         jwt = JWTAuth()
         username = jwt.decode(request.COOKIES['token_access'])
         data_json = {"qty": request.POST.getlist('qty_item'), "id_item": request.POST.getlist('id_item'), "id_cart": request.POST.getlist('id_cart'), "username": username['username']}
-        response = requests.post('http://127.0.0.1:8000/api/store/transaction/', data=data_json, headers=header).json()
+        response = requests.post('http://192.168.0.15:8000/api/store/transaction/', data=data_json, headers=header).json()
 
-        if response['status'] == 200:
+        if response['status'] == 201:
             # context = {
             #     'response': response,
             #     'user': username['username'],
@@ -90,7 +90,7 @@ def Transaction(request):
         jwt = JWTAuth()
         username = jwt.decode(request.COOKIES['token_access'])
         header = {"Authorization" : request.COOKIES['token_access']}
-        response = requests.get('http://127.0.0.1:8000/api/store/transaction/', headers=header).json()
+        response = requests.get('http://192.168.0.15:8000/api/store/transaction/', headers=header).json()
         # print(response)
 
         if response['status'] == 200 or response['status'] == 204:
@@ -111,18 +111,20 @@ def Pay(request, id_trans):
         header = {"Authorization" : request.COOKIES['token_access']}
         data_json = {"id_transaction": id_trans, "username": username['username']}
 
-        response = requests.post('http://127.0.0.1:8000/api/store/pay/', headers=header, data=data_json).json()
+        response = requests.post('http://192.168.0.15:8000/api/store/pay/', headers=header, data=data_json).json()
 
         if response['status'] == 200:
             context = {
                 'response': response,
                 'user': username['username'],
+                'id_trans': id_trans,
             }
             return render(request, 'midtrans/checkout.html', context=context)
         elif response['status'] == 400:
             context = {
                 'title': "Failed",
                 'user': username['username'],
+                'id_trans': id_trans,
             }
             return render(request, 'midtrans/failed_checkout.html', context=context)
     else:
@@ -138,7 +140,7 @@ def Cancel(request):
             header = {"Authorization" : request.COOKIES['token_access']}
             data_json = {"id_transaction": request.POST['id_transaction'], "username": username['username']}
 
-            response = requests.post('http://127.0.0.1:8000/api/store/cancel/', headers=header, data=data_json).json()
+            response = requests.post('http://192.168.0.15:8000/api/store/cancel/', headers=header, data=data_json).json()
 
             return redirect('pay', id_trans=request.POST['id_transaction'])
     else:
@@ -150,7 +152,7 @@ def LoginUser(request):
     if not TokenAvailable(request):
         if request.method == "POST":
             data_json = {"username": request.POST['username'], "password": request.POST['password']}
-            response = requests.post('http://127.0.0.1:8000/api/user/login/', data=data_json)
+            response = requests.post('http://192.168.0.15:8000/api/user/login/', data=data_json)
             result = []
             result.append(response.json())
             if result[0]['data'] != []:
@@ -190,7 +192,7 @@ def SignUpUser(request):
                 "id_role": request.POST['role'],
                 "password": request.POST['password'],
             }
-            response = requests.post('http://127.0.0.1:8000/api/user/signup/', files=image, data=data_json)
+            response = requests.post('http://192.168.0.15:8000/api/user/signup/', files=image, data=data_json)
             result = []
             result.append(response.json())
             if result[0]['data'] != []:
@@ -222,7 +224,7 @@ def SignUpStore(request):
                 "pin": request.POST['pin'],
                 "id_store": request.POST['id'],
             }
-            response = requests.post('http://127.0.0.1:8000/api/user/signup_store/'+username['username']+'/?api_key='+env('API_KEY'), headers=header, files=image, data=data_json).json()
+            response = requests.post('http://192.168.0.15:8000/api/user/signup_store/'+username['username']+'/?api_key='+env('API_KEY'), headers=header, files=image, data=data_json).json()
             if response['data'] != []:
                 return redirect('pin_store_auth')
             else:
@@ -236,7 +238,7 @@ def SignUpStore(request):
             jwt = JWTAuth()
             username = jwt.decode(request.COOKIES['token_access'])
             header = {"Authorization" : request.COOKIES['token_access']}
-            response = requests.get('http://127.0.0.1:8000/api/user/signup_store/'+username['username']+'/?api_key='+env('API_KEY'), headers=header).json()
+            response = requests.get('http://192.168.0.15:8000/api/user/signup_store/'+username['username']+'/?api_key='+env('API_KEY'), headers=header).json()
             if response['data'] != []:
                 return redirect('pin_store_auth')
             else:
@@ -267,7 +269,7 @@ def SignUpStoreAuth(request):
                     "pin": pin
                 }
                 header = {"Authorization" : request.COOKIES['token_access']}
-                response = requests.post('http://127.0.0.1:8000/api/user/signup_store_auth/', json=data_json, headers=header).json()
+                response = requests.post('http://192.168.0.15:8000/api/user/signup_store_auth/', json=data_json, headers=header).json()
                 if response['data'] != []:
                     res = redirect("home_store", id_store=response['data']['id'])
                     res.set_cookie('pin', response['token'], max_age=60*60*2)
@@ -289,7 +291,7 @@ def Index(request):
     if TokenAvailable(request):
         jwt = JWTAuth()
         username = jwt.decode(request.COOKIES['token_access'])
-        response = requests.get('http://127.0.0.1:8000/api/store/index/').json()
+        response = requests.get('http://192.168.0.15:8000/api/store/index/').json()
         context = {
             'title': 'Home',
             'user': username['username'],
@@ -297,7 +299,7 @@ def Index(request):
         }
         return render(request, 'content/index.html', context)
     else:
-        response = requests.get('http://127.0.0.1:8000/api/store/index/').json()
+        response = requests.get('http://192.168.0.15:8000/api/store/index/').json()
         context = {
             'title': 'Home',
             'all_item': response
@@ -312,12 +314,14 @@ def IndexStore(request, id_store):
         jwt = JWTAuth()
         username = jwt.decode(request.COOKIES['token_access'])
         header = {"Authorization" : request.COOKIES['token_access']}
-        response = requests.get('http://127.0.0.1:8000/api/store/index/'+id_store+'/?api_key='+env('API_KEY'), headers=header).json()
+        response_item = requests.get('http://192.168.0.15:8000/api/store/index/'+id_store+'/?api_key='+env('API_KEY'), headers=header).json()
+        response_category = requests.get('http://192.168.0.15:8000/api/store/category/?api_key='+env('API_KEY'), headers=header).json()
         context = {
             'title': 'Home Store',
             'user': username['username'],
             'store': request.COOKIES['store'],
-            'item_store': response
+            'item_store': response_item,
+            'category': response_category
         }
         return render(request, 'store/index.html', context)
 
@@ -337,7 +341,7 @@ def AddItem(request):
             'photo_item': request.FILES['photo_item']
         }
         header = {"Authorization" : request.COOKIES['token_access']}
-        requests.post('http://127.0.0.1:8000/api/store/item/', files=image, data=data_img, headers=header).json()
+        requests.post('http://192.168.0.15:8000/api/store/item/', files=image, data=data_img, headers=header).json()
         return redirect("home_store", id_store=request.COOKIES['store'])
 
     if request.POST['action'] == 'update':
@@ -354,14 +358,14 @@ def AddItem(request):
             'photo_item': request.FILES['photo_item']
         }
         header = {"Authorization" : request.COOKIES['token_access']}
-        requests.put('http://127.0.0.1:8000/api/store/item/'+ request.POST['id']+'/', files=image, data=data_img, headers=header).json()
+        requests.put('http://192.168.0.15:8000/api/store/item/'+ request.POST['id']+'/', files=image, data=data_img, headers=header).json()
         return redirect("home_store", id_store=request.COOKIES['store'])
 
 
 def DeleteItem(request, id=0):
     if TokenAvailable(request):
         header = {"Authorization" : request.COOKIES['token_access']}
-        response = requests.delete('http://127.0.0.1:8000/api/store/item/'+id+'/', headers=header).json()
+        response = requests.delete('http://192.168.0.15:8000/api/store/item/'+id+'/', headers=header).json()
         messages.success(request, response['message'])
         return redirect("home_store", id_store=request.COOKIES['store'])
     else:
@@ -374,7 +378,7 @@ def Search(request):
     if TokenAvailable(request):
         jwt = JWTAuth()
         username = jwt.decode(request.COOKIES['token_access'])
-        response = requests.get('http://127.0.0.1:8000/api/store/search/'+data_search).json()
+        response = requests.get('http://192.168.0.15:8000/api/store/search/'+data_search).json()
         context = {
             'title': 'Home',
             'user': username['username'],
@@ -382,7 +386,7 @@ def Search(request):
         }
         return render(request, 'content/index.html', context)
     else:
-        response = requests.get('http://127.0.0.1:8000/api/store/search/'+data_search).json()
+        response = requests.get('http://192.168.0.15:8000/api/store/search/'+data_search).json()
         context = {
             'title': 'Home',
             'all_item': response
@@ -395,7 +399,7 @@ def Cart(request):
         jwt = JWTAuth()
         username = jwt.decode(request.COOKIES['token_access'])
         header = {"Authorization" : request.COOKIES['token_access']}
-        response = requests.get('http://127.0.0.1:8000/api/store/cart/', headers=header).json()
+        response = requests.get('http://192.168.0.15:8000/api/store/cart/', headers=header).json()
         context = {
             'title': 'Home',
             'user': username['username'],
@@ -416,7 +420,7 @@ def AddCart(request):
             "username": username['username']
         }
         header = {"Authorization" : request.COOKIES['token_access']}
-        response = requests.post('http://127.0.0.1:8000/api/store/cart/', headers=header, data=data_json).json()
+        response = requests.post('http://192.168.0.15:8000/api/store/cart/', headers=header, data=data_json).json()
 
         if response['status'] == 204:
             messages.error(request, response['message'])
@@ -435,7 +439,7 @@ def AddCart(request):
 def DeleteCart(request, id=0):
     if TokenAvailable(request):
         header = {"Authorization" : request.COOKIES['token_access']}
-        response = requests.delete('http://127.0.0.1:8000/api/store/cart/'+id+'/', headers=header).json()
+        response = requests.delete('http://192.168.0.15:8000/api/store/cart/'+id+'/', headers=header).json()
         messages.success(request, response['message'])
         return redirect("cart")
     else:
